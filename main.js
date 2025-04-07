@@ -1,11 +1,11 @@
 import router from './router.js'
 
-const { createApp } = Vue
+const { createApp, h } = Vue
 
 const app = createApp({
   data() {
     return {
-      viewComponent: { template: '<div>Ładowanie...</div>' }
+      currentComponent: null
     }
   },
   created() {
@@ -18,16 +18,22 @@ const app = createApp({
       console.log("Routing to:", path);
       const component = await router(path)
       console.log("Component:", component.template); 
-      this.viewComponent = component
+
+      if (typeof component === 'object' && (component.template || component.render)) {
+        this.currentComponent = component
+      } else {
+        console.error("Błąd routera: niepoprawny komponent:", component)
+        this.currentComponent = {
+          template: "<div>Nie udało się załadować komponentu.</div>"
+        }
+      }
     }
   },
-  components: {
-    DynamicView: {
-      props: ['component'],
-      template: `<div v-html="component.template"></div>`
-    }
-  },
-  template: `<DynamicView :component="viewComponent" :key="viewComponent.template" />`
+  render() {
+    return this.currentComponent
+      ? h(this.currentComponent)
+      : h('div', 'Ładowanie...')
+  }
 })
 
 app.mount('#app')
