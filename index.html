@@ -7,19 +7,40 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#4CAF50">
 
-  <link rel="icon" href="./icons/icon1.png">
+  <link rel="icon" href="./icons/icon.png">
 
-  <script type="module" src="https://unpkg.com/vue@3/dist/vue.esm-browser.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
   <nav>
-    <a href="/">Home</a> |
-    <a href="/profile">Profil</a>
+    <a href="#/">Home</a> |
+    <a href="#/profile">Profil</a> |
+    <a href="#/login">Zaloguj się</a>
   </nav>
 
   <div id="app"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA0G-OKWxw7dJqGT-MMY0rwrN3TZoCrtec",
+    authDomain: "eventhunter-749bf.firebaseapp.com",
+    projectId: "eventhunter-749bf",
+    storageBucket: "eventhunter-749bf.firebasestorage.app",
+    messagingSenderId: "1014532896180",
+    appId: "1:1014532896180:web:f3efe7b2e6000ece2d2ee1",
+    measurementId: "G-9SXKRX92F7"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+
   <script type="module" src="./main.js"></script>
+
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js')
@@ -27,5 +48,8 @@
         .catch(err => console.error('❌ Rejestracja nieudana:', err));
     }
   </script>
+
+    <script src="auth.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
