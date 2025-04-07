@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EventHunter – Wyszukaj</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+  <div id="search-app">Ładowanie wyszukiwarki...</div>
+
+  <script type="module">
+    import Search from './components/SearchComponent.js'
+    const { createApp } = Vue
+    const app = createApp(Search)
+    app.mount('#search-app')
+  </script>
+
+</body>
+</html>

@@ -15,6 +15,9 @@ export default async function router(path) {
     case '/':
       htmlPath = 'home.html';
       break;
+    case '/search':
+      htmlPath = 'search.html';
+      break;
     case '/profile':
       htmlPath = 'profile.html';
       break;

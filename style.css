@@ -1,0 +1,110 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f9fafb;
+    color: #111827;
+    height: 100%;
+}
+nav {
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+nav a {
+    color: #3b82f6;
+    text-decoration: none;
+    margin-left: 1rem;
+    font-weight: 500;
+}
+nav a:hover {
+    color: #1d4ed8;
+}
+.hero {
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.1));
+    z-index: 1;
+}
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    padding: 2rem;
+}
+.hero-content h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+.hero-content p {
+    font-size: 1rem;
+    color: #e5e7eb;
+}
+.hero-content a {
+    display: inline-block;
+    margin-top: 0.8rem;
+    padding: 0.5rem 1rem;
+    background: #3b82f6;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+}
+.hero-content a:hover {
+    background-color: #2563eb;
+}
+.carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.8rem;
+    padding: 1rem;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+.card {
+    width: 160px;
+    flex-shrink: 0;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+.card:hover {
+    transform: scale(1.01);
+}
+.card img {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+}
+.card-content {
+    padding: 0.5rem 0.6rem;
+}
+.card-content h3 {
+    margin: 0 0 0.3rem 0;
+    font-size: 0.85rem;
+    color: #111827;
+}
+.card-content p {
+    margin: 0.2rem 0;
+    font-size: 0.7rem;
+    color: #6b7280;
+}
