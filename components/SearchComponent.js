@@ -37,7 +37,7 @@ export default {
       <div v-if="loading">Ładowanie...</div>
 
       <div class='carousel' v-else>
-        <div v-for="event in filteredEvents" :key="event.id" class="card">
+        <div v-for="event in filteredEvents" :key="event.id" class="card" :onFavorite="addToFavorites">
           <img :src="event.images[0].url" alt="Event image" />
           <div class='card-content'>
             <h3>{{ event.name }}</h3>
@@ -106,6 +106,20 @@ export default {
         alert("Nie udało się pobrać lokalizacji.");
         this.loading = false;
       });
+    },
+    methods: {
+      async loadEvents() {
+      },
+      addToFavorites(event) {
+        let favs = JSON.parse(localStorage.getItem('favorites')) || []
+        if (!favs.some(e => e.id === event.id)) {
+          favs.push(event)
+          localStorage.setItem('favorites', JSON.stringify(favs))
+          alert("Dodano do ulubionych!")
+        } else {
+          alert("To wydarzenie jest już w ulubionych.")
+        }
+      },
     },
     renderMap(centerLat = 50.061, centerLon = 19.937) {
       this.$nextTick(() => {

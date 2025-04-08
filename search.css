@@ -7,7 +7,7 @@ body {
   }
   
   .container {
-    max-width: 960px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
   }
@@ -19,8 +19,18 @@ body {
     font-size: 2rem;
   }
 
-  h1, h2 {
+  h1 {
     color: #e50914;
+  }
+  h2 {
+    color: #e50914;
+    font-size: 1.6rem;
+    margin: 2rem 0 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-left: 4px solid #e50914;
+    padding-left: 12px;
   }
   
   input, select {

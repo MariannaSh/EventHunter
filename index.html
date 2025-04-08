@@ -14,15 +14,22 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-  <nav>
-    <div><strong>EventHunter</strong></div>
-    <div>
+  <nav class="main-nav">
+    <div class="nav-left"><strong>EventHunter</strong></div>
+  
+    <div class="nav-center">
       <a href="#/">Strona główna</a>
       <a href="#/search">Wyszukaj</a>
+      <a href="#/favorites">Ulubione</a>
       <a href="#/profile">Profil</a>
-      <a href="#/login">Zaloguj się</a>
+    </div>
+  
+    <div class="nav-right">
+      <a href="#/login" class="login-button">Zaloguj się</a>
     </div>
   </nav>
+  
+  
 
   <div id="app"></div>
 

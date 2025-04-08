@@ -6,24 +6,63 @@ html, body {
     color: #111827;
     height: 100%;
 }
-nav {
-    background: white;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 1.2rem 2rem;
+.main-nav {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    justify-content: space-between;
+    background-color: #141414;
+    padding: 0.5rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: none;
+    position: relative;
 }
-nav a {
+  
+.nav-left strong {
+    font-size: 1.5rem;
     color: #e50914;
+}
+  
+.nav-center {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex: 1;
+}
+  
+.nav-center a {
+    color: white;
     text-decoration: none;
-    margin-left: 1rem;
-    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
 }
-nav a:hover {
-    color: #1d4ed8;
+  
+.nav-center a:hover {
+    color: #e50914;
 }
+  
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+  
+.login-button {
+    background-color: #e50914;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+  
+.login-button:hover {
+    background-color: #be123c;
+}
+
 .hero {
     position: relative;
     min-height: 300px;
@@ -70,41 +109,123 @@ nav a:hover {
 .hero-content a:hover {
     background-color: #2563eb;
 }
-.carousel {
+
+/* Ulubione */
+.favorite-button {
+    background-color: #e11d48;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+  
+.favorite-button:hover {
+    background-color: #be123c; 
+    transform: scale(1.05);
+}
+  
+.favorite-button:active {
+    transform: scale(0.97);
+}
+
+.favorites-widget {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+.favorites-heading {
+    font-size: 2rem;
+    color: #1d4ed8;
+    margin-bottom: 2.5rem;
+}
+.favorites-heading span {
+    color: #e11d48;
+}
+.poster-list {
     display: flex;
-    overflow-x: auto;
-    gap: 0.8rem;
-    padding: 1rem;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-  }
-.card {
-    width: 160px;
-    flex-shrink: 0;
-    background-color: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+.countdown-poster {
+    position: relative;
+    width: 280px;
+    height: 430px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 14px;
     overflow: hidden;
-    transition: transform 0.3s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
-.card:hover {
-    transform: scale(1.01);
+.countdown-poster .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-.card img {
-    width: 100%;
-    aspect-ratio: 16 / 7;
-    object-fit: cover;
+.event-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
 }
-.card-content {
-    padding: 0.5rem 0.6rem;
+.big-days {
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
 }
-.card-content h3 {
-    margin: 0 0 0.3rem 0;
+.label-days {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    color: #facc15;
+    font-weight: 600;
+    margin-top: -0.3rem;
+}
+.time-details {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+.time-details span {
+    font-size: 0.8rem;
+    margin-left: 0.2rem;
+}
+.details-link {
+    color: #facc15;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    margin-bottom: 0.5rem;
+}
+.remove-button {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
     font-size: 0.85rem;
-    color: #111827;
+    margin-top: 0.5rem;
 }
-.card-content p {
-    margin: 0.2rem 0;
-    font-size: 0.7rem;
-    color: #6b7280;
+.remove-button:hover {
+    background: #dc2626;
 }
+.expired {
+    font-size: 1rem;
+    color: #f87171;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+  

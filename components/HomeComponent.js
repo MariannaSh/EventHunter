@@ -9,7 +9,7 @@ const categories = [
 ];
 
 const EventCard = {
-  props: ['event'],
+  props: ['event', 'onFavorite'],
   template: `
     <div class='card'>
       <img :src="event.images[0].url" alt="Event image" />
@@ -18,6 +18,7 @@ const EventCard = {
         <p>{{ event._embedded?.venues?.[0]?.name || 'Nieznana lokalizacja' }}</p>
         <p>{{ event.dates.start.localDate }} {{ event.dates.start.localTime || '' }}</p>
         <a :href="event.url" target="_blank">Zobacz szczegóły</a>
+        <button @click="onFavorite(event)" class="favorite-button">Dodaj do ulubionych</button>
       </div>
     </div>`
 };
@@ -71,7 +72,18 @@ export default {
       if (this.allEvents.length === 0) return;
       this.featuredIndex = (this.featuredIndex + 1) % this.allEvents.length;
       this.featuredEvent = this.allEvents[this.featuredIndex];
-    }
+    },
+    addToFavorites(event) {
+      let favs = JSON.parse(localStorage.getItem('favorites')) || []
+      if (!favs.some(e => e.id === event.id)) {
+        favs.push(event)
+        localStorage.setItem('favorites', JSON.stringify(favs))
+        alert("Dodano do ulubionych!")
+      } else {
+        alert("To wydarzenie jest już w ulubionych.")
+      }
+    },
+   
   },
   template: `
     <div>
@@ -87,7 +99,7 @@ export default {
           <h2>{{ cat.name }}</h2>
           <div v-if="cat.loading">Ładowanie...</div>
           <div class='carousel' v-else>
-            <EventCard v-for="event in cat.events" :key="event.id" :event="event" />
+            <EventCard v-for="event in cat.events" :key="event.id" :event="event" :onFavorite="addToFavorites"/>
           </div>
         </div>
       </div>
