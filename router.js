@@ -1,6 +1,7 @@
 import Home from './components/HomeComponent.js'
 import Search from './components/SearchComponent.js'
 import Login from './components/LoginComponent.js'
+import Profile from'./components/ProfileComponent.js'
 
 export default async function router(path) {
   let htmlPath = '';
@@ -13,6 +14,7 @@ export default async function router(path) {
       return { template: "<div>Przekierowywanie...</div>" };
     }
   }
+  
 
   switch (path) {
     case '':
@@ -21,8 +23,7 @@ export default async function router(path) {
     case '/search':
       return Search
     case '/profile':
-      htmlPath = 'profile.html';
-      break;
+      return Profile;
     case '/login':
       return Login;
     default:
