@@ -73,14 +73,30 @@ export default {
       this.featuredIndex = (this.featuredIndex + 1) % this.allEvents.length;
       this.featuredEvent = this.allEvents[this.featuredIndex];
     },
-    addToFavorites(event) {
-      let favs = JSON.parse(localStorage.getItem('favorites')) || []
-      if (!favs.some(e => e.id === event.id)) {
-        favs.push(event)
-        localStorage.setItem('favorites', JSON.stringify(favs))
-        alert("Dodano do ulubionych!")
-      } else {
-        alert("To wydarzenie jest już w ulubionych.")
+    async addToFavorites(event) {
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        alert("Musisz być zalogowany, aby dodawać do ulubionych.");
+        return;
+      }
+    
+      const db = firebase.firestore();
+      const docRef = db.collection("favorites").doc(user.uid);
+    
+      try {
+        const doc = await docRef.get();
+        let favs = doc.exists ? doc.data().items : [];
+
+        if (!favs.some(e => e.id === event.id)) {
+          favs.push(event);
+          await docRef.set({ items: favs }); 
+          alert("Dodano do ulubionych!");
+        } else {
+          alert("To wydarzenie jest już w ulubionych.");
+        }
+      } catch (err) {
+        console.error("Błąd zapisu do Firestore:", err);
+        alert("Nie udało się zapisać ulubionego wydarzenia.");
       }
     },
    

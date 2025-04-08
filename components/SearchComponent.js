@@ -107,8 +107,8 @@ export default {
         this.loading = false;
       });
     },
-    methods: {
-      async loadEvents() {
+
+    async loadEvents() {
       },
       addToFavorites(event) {
         let favs = JSON.parse(localStorage.getItem('favorites')) || []
@@ -162,5 +162,4 @@ export default {
         }
       });
     }
-  }
 }
