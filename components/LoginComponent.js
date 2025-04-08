@@ -6,16 +6,25 @@ export default {
       }
     },
     template: `
-      <div>
+    <div class="login-background">
+        <div class="login-container">
         <h2>Zaloguj się</h2>
-        <input type="email" v-model="email" placeholder="Email"><br><br>
-        <input type="password" v-model="password" placeholder="Hasło"><br><br>
-  
-        <button @click="login">Zaloguj się</button>
-        <button @click="signup">Utwórz konto</button><br><br>
-        <button @click="googleLogin">Zaloguj przez Google</button>
-      </div>
-    `,
+        <input type="email" v-model="email" placeholder="Email" class="login-input"><br>
+        <input type="password" v-model="password" placeholder="Hasło" class="login-input"><br>
+        
+        <button @click="login" class="login-button">Zaloguj się</button>
+        <div class="login-separator">lub</div>
+        <button @click="googleLogin" class="login-google">
+        <img src="https://images.icon-icons.com/729/PNG/512/google_icon-icons.com_62736.png" alt="Google icon" class="google-icon">
+        Zaloguj przez Google
+        </button>
+        <p class="login-extra">
+            Nie masz konta? <a href="#" @click.prevent="signup">Zarejestruj się</a>
+        </p>
+        </div>
+    </div>
+    `
+,
     methods: {
       async login() {
         try {
