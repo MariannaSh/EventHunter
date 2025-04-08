@@ -1,5 +1,6 @@
 import Home from './components/HomeComponent.js'
 import Search from './components/SearchComponent.js'
+import Login from './components/LoginComponent.js'
 
 export default async function router(path) {
   let htmlPath = '';
@@ -23,8 +24,7 @@ export default async function router(path) {
       htmlPath = 'profile.html';
       break;
     case '/login':
-      htmlPath = 'login.html';
-      break;
+      return Login;
     default:
       htmlPath = 'home.html';
   }
