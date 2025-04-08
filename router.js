@@ -3,6 +3,7 @@ import Search from './components/SearchComponent.js'
 import Login from './components/LoginComponent.js'
 import Profile from'./components/ProfileComponent.js'
 import Favorites from './components/FavoritesComponent.js'
+import EventPhotos from './components/EventPhotosComponent.js'
 
 export default async function router(path) {
   let htmlPath = '';
@@ -27,6 +28,8 @@ export default async function router(path) {
       return Favorites;
     case '/profile':
       return Profile;
+    case '/event-photos': 
+      return EventPhotos;
     case '/login':
       return Login;
     default:
