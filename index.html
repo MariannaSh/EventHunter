@@ -14,8 +14,15 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-  <nav class="main-nav">
-    <div class="nav-left"><strong>EventHunter</strong></div>
+  <nav class="main-nav" id="mainNav">
+    <div class="nav-left">
+      <strong>EventHunter</strong>
+      <div class="burger" id="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
   
     <div class="nav-center">
       <a href="#/">Strona główna</a>
@@ -28,7 +35,7 @@
     <div class="nav-right">
       <a href="#/login" class="login-button">Zaloguj się</a>
     </div>
-  </nav>
+  </nav>  
   
 
   <div id="app"></div>
@@ -54,8 +61,15 @@
   firebase.initializeApp(firebaseConfig);
 </script>
 
+  <script>
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('mainNav');
 
-  <script type="module" src="./main.js"></script>
+    burger.addEventListener('click', () => {
+      nav.classList.toggle('open');
+    });
+  </script>
+
 
   <script>
     if ('serviceWorker' in navigator) {
