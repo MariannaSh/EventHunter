@@ -37,13 +37,14 @@ export default {
       <div v-if="loading">Ładowanie...</div>
 
       <div class='carousel' v-else>
-        <div v-for="event in filteredEvents" :key="event.id" class="card" :onFavorite="addToFavorites">
+        <div v-for="event in filteredEvents" :key="event.id" class="card">
           <img :src="event.images[0].url" alt="Event image" />
           <div class='card-content'>
             <h3>{{ event.name }}</h3>
             <p>{{ event._embedded?.venues?.[0]?.name || 'Nieznana lokalizacja' }}</p>
             <p>{{ event.dates.start.localDate }} {{ event.dates.start.localTime || '' }}</p>
             <a :href="event.url" target="_blank">Zobacz szczegóły</a>
+
           </div>
         </div>
       </div>
@@ -107,20 +108,6 @@ export default {
         this.loading = false;
       });
     },
-
-    async loadEvents() {
-      },
-      addToFavorites(event) {
-        let favs = JSON.parse(localStorage.getItem('favorites')) || []
-        if (!favs.some(e => e.id === event.id)) {
-          favs.push(event)
-          localStorage.setItem('favorites', JSON.stringify(favs))
-          alert("Dodano do ulubionych!")
-        } else {
-          alert("To wydarzenie jest już w ulubionych.")
-        }
-      },
-    },
     renderMap(centerLat = 50.061, centerLon = 19.937) {
       this.$nextTick(() => {
         if (!this.showMap) return;
@@ -162,4 +149,5 @@ export default {
         }
       });
     }
+  }
 }
