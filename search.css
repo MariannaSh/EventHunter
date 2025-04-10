@@ -67,16 +67,27 @@ body {
   .carousel-wrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
+    width: 100%;
+    overflow: hidden;
     scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
   }
   .carousel {
     display: flex;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     gap: 1.2rem;
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
   }
+  
+  .carousel::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+  
+  
   .arrow {
     background-color: rgba(255, 255, 255, 0.08);
     border: none;
