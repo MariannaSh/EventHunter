@@ -3,7 +3,7 @@ const apiKey = 'lRzZwD7QXCGiqbjbsiaLV9HVIVZNCDnx';
 const categories = [
   { name: 'Muzyka', param: 'music' },
   { name: 'Sport', param: 'sports' },
-  { name: 'Teatr', param: 'arts' },
+  { name: 'Teatr', param: 'arts, theatre' },
   { name: 'Rodzinne', param: 'family' },
   { name: 'Kluby', param: 'clubs' }
 ];
@@ -51,7 +51,7 @@ export default {
       for (const cat of this.categoryData) {
         try {
           const res = await fetch(
-            `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&classificationName=${cat.param}&countryCode=PL&size=10`
+            `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&classificationName=${cat.param}&size=20`
           );
           const data = await res.json();
           if (data._embedded?.events) {
@@ -99,7 +99,11 @@ export default {
         alert("Nie udało się zapisać ulubionego wydarzenia.");
       }
     },
-   
+    scrollCarousel(category, direction) {
+      const container = document.getElementById('carousel-' + category);
+      const scrollAmount = 300;
+      container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    }
   },
   template: `
     <div>
@@ -114,8 +118,12 @@ export default {
         <div v-for="cat in categoryData" :key="cat.name">
           <h2>{{ cat.name }}</h2>
           <div v-if="cat.loading">Ładowanie...</div>
-          <div class='carousel' v-else>
-            <EventCard v-for="event in cat.events" :key="event.id" :event="event" :onFavorite="addToFavorites"/>
+          <div class="carousel-wrapper" v-else>
+            <button class="arrow left" @click="scrollCarousel(cat.name, -1)">‹</button>
+            <div class="carousel" :id="'carousel-' + cat.name">
+              <EventCard v-for="event in cat.events" :key="event.id" :event="event" />
+            </div>
+            <button class="arrow right" @click="scrollCarousel(cat.name, 1)">›</button>
           </div>
         </div>
       </div>

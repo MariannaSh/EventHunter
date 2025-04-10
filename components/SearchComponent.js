@@ -15,40 +15,73 @@ export default {
   },
   template: `
     <div class='container'>
-      <h1>Wyszukaj wydarzenia</h1>
-      
-      <input v-model="keyword" placeholder="Słowo kluczowe" />
-      <input v-model="city" placeholder="Miasto" />
-      <label>Od: <input type="date" v-model="startDate" /></label>
-      <label>Do: <input type="date" v-model="endDate" /></label>
+      <div class="search-container">
+        <h1>Wyszukaj wydarzenia</h1>
+        <input v-model="keyword" placeholder="Wyszukaj..." />
+        <input v-model="selectedCountry" list="country-list" placeholder="Wybierz kraj" />
+        <datalist id="country-list">
+          <option value="Polska"></option>
+          <option value="Niemcy"></option>
+          <option value="Francja"></option>
+          <option value="Włochy"></option>
+          <option value="Hiszpania"></option>
+          <option value="Holandia"></option>
+          <option value="Wielka Brytania"></option>
+          <option value="Austria"></option>
+          <option value="Belgia"></option>
+          <option value="Szwecja"></option>
+          <option value="Norwegia"></option>
+          <option value="Finlandia"></option>
+          <option value="Dania"></option>
+          <option value="Czechy"></option>
+          <option value="Słowacja"></option>
+          <option value="Węgry"></option>
+          <option value="Litwa"></option>
+          <option value="Łotwa"></option>
+          <option value="Estonia"></option>
+          <option value="Rumunia"></option>
+          <option value="Bułgaria"></option>
+          <option value="Grecja"></option>
+          <option value="Irlandia"></option>
+          <option value="Portugalia"></option>
+          <option value="Szwajcaria"></option>
+        </datalist>
 
-      <select v-model="category">
-        <option value="">Wszystkie</option>
-        <option value="music">Muzyka</option>
-        <option value="sports">Sport</option>
-        <option value="arts">Teatr</option>
-        <option value="family">Rodzinne</option>
-        <option value="clubs">Kluby</option>
-      </select>
+        <input v-model="city" placeholder="Miasto" />
+        <div class="date-row">
+          <label>Od: <input type="date" v-model="startDate" /></label>
+          <label>Do: <input type="date" v-model="endDate" /></label>
+        </div>
+        <select v-model="category">
+          <option value="">Wszystkie</option>
+          <option value="music">Muzyka</option>
+          <option value="sports">Sport</option>
+          <option value="arts">Teatr</option>
+          <option value="family">Rodzinne</option>
+          <option value="clubs">Kluby</option>
+        </select>
 
-      <button @click="searchEvents">Szukaj</button>
-      <button @click="searchNearbyEvents">Znajdź wydarzenia w pobliżu (GPS)</button>
+        <button @click="searchEvents">Szukaj</button>
+        <button @click="searchNearbyEvents">Znajdź wydarzenia w pobliżu (GPS)</button>
 
-      <div v-if="loading">Ładowanie...</div>
+        <div v-if="loading">Ładowanie...</div>
+      </div> 
 
-      <div class='carousel' v-else>
-        <div v-for="event in filteredEvents" :key="event.id" class="card">
-          <img :src="event.images[0].url" alt="Event image" />
-          <div class='card-content'>
-            <h3>{{ event.name }}</h3>
-            <p>{{ event._embedded?.venues?.[0]?.name || 'Nieznana lokalizacja' }}</p>
-            <p>{{ event.dates.start.localDate }} {{ event.dates.start.localTime || '' }}</p>
-            <a :href="event.url" target="_blank">Zobacz szczegóły</a>
-
+      <div class="carousel-wrapper" v-if="!loading && searched && filteredEvents.length > 0">
+        <button class="arrow left" @click="scrollCarousel(-1)">‹</button>
+        <div class="carousel" id="search-carousel">
+          <div v-for="event in filteredEvents" :key="event.id" class="card">
+            <img :src="event.images[0].url" alt="Event image" />
+            <div class='card-content'>
+              <h3>{{ event.name }}</h3>
+              <p>{{ event._embedded?.venues?.[0]?.name || 'Nieznana lokalizacja' }}</p>
+              <p>{{ event.dates.start.localDate }} {{ event.dates.start.localTime || '' }}</p>
+              <a :href="event.url" target="_blank">Zobacz szczegóły</a>
+            </div>
           </div>
         </div>
+        <button class="arrow right" @click="scrollCarousel(1)">›</button>
       </div>
-
       <div v-if="showMap" id="map" style="height: 400px; margin-top: 20px;"></div>
       <div v-if="!loading && filteredEvents.length === 0 && searched">Nie znaleziono wydarzeń.</div>
     </div>
@@ -74,7 +107,8 @@ export default {
       if (this.keyword) url += `&keyword=${this.keyword}`;
       if (this.city) url += `&city=${this.city}`;
       if (this.category) url += `&classificationName=${this.category}`;
-
+      if (this.countryCode) url += `&countryCode=${this.countryCode}`;
+      
       const res = await fetch(url);
       const data = await res.json();
       this.events = data._embedded?.events || [];
@@ -148,6 +182,12 @@ export default {
           }
         }
       });
+    },
+    scrollCarousel(direction) {
+      const container = document.getElementById('search-carousel');
+      const scrollAmount = 300;
+      container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
     }
+    
   }
 }
