@@ -1,25 +1,3 @@
-const apiKey = 'lRzZwD7QXCGiqbjbsiaLV9HVIVZNCDnx';
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAkt4N57_1TZICX629Qzzvgk5WB72BOLdE",
-  authDomain: "eventhunter-1a753.firebaseapp.com",
-  projectId: "eventhunter-1a753",
-  storageBucket: "eventhunter-1a753.firebasestorage.app",
-  messagingSenderId: "933383023108",
-  appId: "1:933383023108:web:063a192a0a2baa267fe351",
-  measurementId: "G-EB3BCFZVNB"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
-const auth = getAuth(app);
-
 export default {
   data() {
     return {
@@ -28,34 +6,16 @@ export default {
       selectedCategory: '',
       startDate: '',
       endDate: '',
-      eventPhotos: [],
-      user: null,
     };
   },
   mounted() {
-    this.loadPastEvents(); 
-
-    onAuthStateChanged(auth, (user) => {
-      this.user = user; 
-      console.log('User:', this.user);  
-    });
-  },
-  watch: {
-    selectedCategory(newCategory) {
-      this.loadPastEvents();
-    },
-    startDate(newStartDate) {
-      this.loadPastEvents();
-    },
-    endDate(newEndDate) {
-      this.loadPastEvents();
-    }
+    this.loadPastEvents();
   },
   methods: {
     async loadPastEvents() {
       this.loading = true;
       try {
-        let url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&startDateTime=1900-01-01T00:00:00Z&size=50&classificationName=${this.selectedCategory}`;
+        let url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=lRzZwD7QXCGiqbjbsiaLV9HVIVZNCDnx&startDateTime=1900-01-01T00:00:00Z&size=50&classificationName=${this.selectedCategory}`;
 
         if (this.startDate && this.endDate) {
           url += `&startDateTime=${this.startDate}T00:00:00Z&endDateTime=${this.endDate}T23:59:59Z`;
@@ -63,120 +23,103 @@ export default {
 
         const res = await fetch(url);
         const data = await res.json();
-
-        console.log('Loaded events:', data);  
-
-        if (data._embedded?.events) {
-          this.events = data._embedded.events;
-        } else {
-          this.events = [];
-        }
+        this.events = data._embedded?.events || [];
+        console.log('Załadowane wydarzenia:', this.events);
       } catch (e) {
-        console.error('Error loading events:', e);
+        console.error('Błąd ładowania wydarzeń:', e);
       } finally {
         this.loading = false;
       }
     },
 
-    async loadEventPhotos(eventId) {
-      try {
-        const q = query(collection(db, 'event_photos'), where('eventId', '==', eventId));
-        const photosSnapshot = await getDocs(q);
-
-        if (photosSnapshot.empty) {
-          this.eventPhotos = [];  
-        } else {
-          this.eventPhotos = photosSnapshot.docs.map(doc => doc.data().imageUrl);
-        }
-      } catch (error) {
-        console.error('Error loading photos:', error);
-      }
+    viewEventPhotos() {
+      console.log('Przekierowanie do galerii...');
+      location.hash = '/gallery';
     },
 
-    viewEventPhotos(event) {
-      location.hash = `/past-event-photos/${event.id}`;
-    },
-
-    async addUserPhoto(eventId) {
+    async addUserPhoto() {
       const fileInput = document.createElement('input');
       fileInput.type = 'file';
-      fileInput.accept = 'image/*'; 
-
+      fileInput.accept = 'image/*';
+    
       fileInput.onchange = async (e) => {
         const file = e.target.files[0];
         if (file) {
-          await this.uploadImageToFirebase(eventId, file);
+          const imageUrl = await this.uploadImageToCloudinary(file);
+          await this.savePhotoToFirestore(imageUrl);
+          alert('Zdjęcie zostało pomyślnie załadowane!');
+          console.log('Załadowany URL zdjęcia:', imageUrl);
         }
       };
-
-      fileInput.click(); 
+    
+      fileInput.click();
     },
-
-    async uploadImageToFirebase(eventId, file) {
-      const storageRef = ref(storage, `event_photos/${eventId}/${file.name}`);
+    
+    async savePhotoToFirestore(imageUrl) {
       try {
-        const snapshot = await uploadBytes(storageRef, file);
-        const imageUrl = await getDownloadURL(snapshot.ref);
-        console.log('Uploaded image URL:', imageUrl);
-
-        await addDoc(collection(db, 'event_photos'), {
-          eventId: eventId,
-          imageUrl: imageUrl,
-          createdAt: serverTimestamp(),
+        const db = firebase.firestore();
+        await db.collection('gallery').add({
+          url: imageUrl,
+          uploadedAt: new Date().toISOString()
         });
-
-        alert('Photo uploaded successfully!');
-        this.loadEventPhotos(eventId);  
-      } catch (error) {
-        console.error('Error uploading photo:', error);
-        alert('Error uploading photo.');
+        console.log('Zdjęcie zapisane w Firestore');
+      } catch (err) {
+        console.error('Błąd zapisywania do Firestore:', err);
       }
+    },
+    
+    async uploadImageToCloudinary(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'EventHunter');
+      formData.append('folder', 'event-photos');
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/dxogt6amu/image/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      return result.secure_url;
     }
   },
+
   template: `
   <div>
-    <h2>Past Events</h2>
+    <link rel="stylesheet" href="/pastevents.css" />
+    <div class="header-container">
+      <h2>Minione Wydarzenia</h2>
+      <div class="filters-container">
+        <select v-model="selectedCategory" @change="loadPastEvents" class="category-select">
+          <option value="">Wszystkie</option>
+          <option value="music">Muzyka</option>
+          <option value="sports">Sport</option>
+          <option value="arts">Sztuka</option>
+          <option value="family">Rodzina</option>
+          <option value="clubs">Kluby</option>
+        </select>
 
-    <!-- Category selection dropdown -->
-    <select v-model="selectedCategory" @change="loadPastEvents" class="category-select">
-      <option value="">All</option>
-      <option value="music">Music</option>
-      <option value="sports">Sports</option>
-      <option value="arts">Arts</option>
-      <option value="family">Family</option>
-      <option value="clubs">Clubs</option>
-    </select>
-
-    <!-- Start Date selection -->
-    <label for="startDate">Start Date</label>
-    <input type="date" v-model="startDate" @change="loadPastEvents" />
-
-    <!-- End Date selection -->
-    <label for="endDate">End Date</label>
-    <input type="date" v-model="endDate" @change="loadPastEvents" />
-
-    <!-- Loading indicator -->
-    <div v-if="loading">Loading...</div>
-
-    <!-- Event display -->
-    <div v-else>
-      <div v-for="event in events" :key="event.id" class="event-card">
-        <img :src="event.images[0]?.url" alt="Event image" />
-        <h3>{{ event.name }}</h3>
-        <button @click="viewEventPhotos(event)">View Photos</button>
-        <button @click="addUserPhoto(event.id)">Add Photo</button> <!-- Add Photo button -->
+        <div class="date-filters">
+          <label for="startDate">Data początkowa</label>
+          <input type="date" v-model="startDate" @change="loadPastEvents" />
+          
+          <label for="endDate">Data końcowa</label>
+          <input type="date" v-model="endDate" @change="loadPastEvents" />
+        </div>
       </div>
     </div>
 
-    <!-- Display event photos -->
-    <div v-if="eventPhotos.length > 0">
-      <h3>Uploaded Photos:</h3>
-      <div v-for="photo in eventPhotos" :key="photo" class="photo-card">
-        <img :src="photo" alt="Event Photo" />
-      </div>
-    </div>
+    <div v-if="loading">Ładowanie...</div>
+
     <div v-else>
-      <p>No photos available for this event.</p>
+      <div class="event-card-container">
+        <div v-for="event in events" :key="event.id" class="event-card">
+          <img :src="event.images[0]?.url" alt="Obrazek wydarzenia" />
+          <h3>{{ event.name }}</h3>
+          <button @click="viewEventPhotos">Zobacz zdjęcia</button>
+          <button @click="addUserPhoto">Dodaj zdjęcie</button>
+        </div>
+      </div>
     </div>
   </div>
   `

@@ -1,9 +1,10 @@
 import Home from './components/HomeComponent.js'
 import Search from './components/SearchComponent.js'
 import Login from './components/LoginComponent.js'
-import Profile from'./components/ProfileComponent.js'
+import Profile from './components/ProfileComponent.js'
 import Favorites from './components/FavoritesComponent.js'
 import EventPhotos from './components/EventPhotosComponent.js'
+import EventGallery from './components/SpecificEventPhotosComponent.js' 
 
 export default async function router(path) {
   let htmlPath = '';
@@ -16,20 +17,21 @@ export default async function router(path) {
       return { template: "<div>Przekierowywanie...</div>" };
     }
   }
-  
 
   switch (path) {
     case '':
     case '/':
-      return Home
+      return Home;
     case '/search':
-      return Search
+      return Search;
     case '/favorites':
       return Favorites;
     case '/profile':
       return Profile;
     case '/event-photos': 
-      return EventPhotos;
+      return EventPhotos; 
+    case '/gallery':
+      return EventGallery; 
     case '/login':
       return Login;
     default:
