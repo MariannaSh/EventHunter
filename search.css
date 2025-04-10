@@ -67,7 +67,7 @@ body {
   .carousel-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 0.5rem;
     width: 100%;
     overflow: hidden;
@@ -80,6 +80,7 @@ body {
     gap: 1.2rem;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+
     scrollbar-width: none; /* Firefox */
   }
   
@@ -364,8 +365,7 @@ body {
   }
 
   .arrow {
-    font-size: 2.5rem;
-    padding: 0.6rem 1rem;
+    display: none;
   }
 
   .card-content h3 {
