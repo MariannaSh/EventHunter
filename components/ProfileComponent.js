@@ -1,21 +1,50 @@
 export default {
   template: `
-    <div>
-      <h2>Twój profil</h2>
-      <p>Tutaj będą zapisane dane użytkownika.</p>
+    <div class="profile-container">
+      <h2 class="profile-heading">TWÓJ PROFIL</h2>
+
+      <div class="avatar-placeholder">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#f3f4f6" stroke="#e11d48" stroke-width="3"/>
+          <text x="50" y="58" font-size="32" text-anchor="middle" fill="#e11d48" font-weight="bold" font-family="Arial" dy=".3em">{{ initials }}</text>
+        </svg>
+      </div>
+
       <p>Zalogowany jako: {{ userEmail }}</p>
-      <button @click="logout">Wyloguj się</button>
-      <button @click="requestNotificationsPermission">Powiadomienia</button>
+      <p>Data rejestracji: {{ createdAt }}</p>
+
+      <button @click="changePassword" class="login-button outline-button">Zmień hasło</button>
+      <button @click="logout" class="login-button">Wyloguj się</button>
+      <div class="notifications-info">
+        <strong>🔔 Chcesz otrzymywać powiadomienia o nowych wydarzeniach w swojej lokalizacji?</strong>
+        <p>
+          Włącz powiadomienia, aby nie przegapić niczego ciekawego!
+        </p>
+        <button @click="requestNotificationsPermission" class="login-button notify-button">
+          Włącz powiadomienia
+        </button>
+      </div>
+
     </div>`,
   data() {
     return {
-      userEmail: ''
+      userEmail: '',
+      createdAt: '',
+        initials: ''
     };
   },
   created() {
     const user = firebase.auth().currentUser;
     if (user) {
       this.userEmail = user.email;
+      this.createdAt = new Date(user.metadata.creationTime).toLocaleDateString();
+      
+      const name = user.email.split('@')[0];
+      this.initials = name
+        .split(/[.\-_]/)           
+        .map(part => part.charAt(0).toUpperCase())
+        .slice(0, 2)
+        .join('');
     }
   },
   methods: {
@@ -42,6 +71,19 @@ export default {
         console.log('Powiadomienia push nie są wspierane przez ten przeglądarkę');
       }
     },
+    changePassword() {
+      const user = firebase.auth().currentUser;
+      if (user && user.email) {
+        firebase.auth().sendPasswordResetEmail(user.email)
+          .then(() => {
+            alert("Wysłano link do zmiany hasła na adres: " + user.email);
+          })
+          .catch((error) => {
+            console.error("Błąd przy zmianie hasła:", error);
+            alert("Nie udało się wysłać linku do zmiany hasła.");
+          });
+      }
+    },    
 
     subscribeToNotifications() {
       const messaging = firebase.messaging();

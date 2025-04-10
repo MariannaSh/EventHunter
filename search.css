@@ -229,4 +229,67 @@ body {
     width: 20px;
     height: 20px;
   }
-    
+
+/* profile */
+.profile-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #f9fafb;
+}
+
+.profile-heading {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #e11d48;
+  margin-bottom: 1.2rem;
+  border-left: 4px solid #e11d48;
+  padding-left: 0.6rem;
+  text-align: left;
+}
+
+.avatar-placeholder {
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e11d48;
+}
+.avatar-placeholder svg {
+  width: 100%;
+  height: 100%;
+}
+
+.notifications-info {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  background: #1f2937;
+  padding: 1rem;
+  border-left: 4px solid #facc15;
+  border-radius: 8px;
+  text-align: left;
+}
+.notifications-info strong {
+  color: #facc15;
+  display: block;
+  font-size: 1rem;
+}
+.notifications-info p {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #d1d5db;
+}
+
+.notify-button {
+  margin-top: 0.5rem;
+  background-color: #facc15;
+  color: #111827;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+.notify-button:hover {
+  background-color: #eab308;
+}
