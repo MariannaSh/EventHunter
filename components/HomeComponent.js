@@ -121,7 +121,7 @@ export default {
           <div class="carousel-wrapper" v-else>
             <button class="arrow left" @click="scrollCarousel(cat.name, -1)">‹</button>
             <div class="carousel" :id="'carousel-' + cat.name">
-              <EventCard v-for="event in cat.events" :key="event.id" :event="event" />
+              <EventCard v-for="event in cat.events" :key="event.id" :event="event" :onFavorite="addToFavorites"/>
             </div>
             <button class="arrow right" @click="scrollCarousel(cat.name, 1)">›</button>
           </div>
