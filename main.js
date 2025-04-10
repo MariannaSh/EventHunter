@@ -27,7 +27,15 @@ const app = createApp({
           template: "<div>Nie udało się załadować komponentu.</div>"
         }
       }
+      firebase.auth().onAuthStateChanged((user) => {
+        const loginBtn = document.querySelector('.nav-right a');
+        if (user && loginBtn) {
+          loginBtn.style.visibility = 'hidden';
+        }
+      });
+      
     }
+
   },
   render() {
     return this.currentComponent
