@@ -38,23 +38,70 @@ export default {
     },
 
     async addUserPhoto() {
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-    
-      fileInput.onchange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const imageUrl = await this.uploadImageToCloudinary(file);
-          await this.savePhotoToFirestore(imageUrl);
-          alert('Zdjęcie zostało pomyślnie załadowane!');
-          console.log('Załadowany URL zdjęcia:', imageUrl);
+      const options = window.confirm('Chcesz zrobić zdjęcie teraz? Kliknij "OK" aby użyć kamery, lub "Anuluj" aby wybrać plik.');
+
+      if (options) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+
+            const videoContainer = document.createElement('div');
+            videoContainer.style.position = 'absolute';
+            videoContainer.style.top = '50%';
+            videoContainer.style.left = '50%';
+            videoContainer.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(videoContainer);
+            videoContainer.appendChild(video);
+
+            const captureButton = document.createElement('button');
+            captureButton.textContent = 'Zrób zdjęcie';
+            captureButton.style.position = 'absolute';
+            captureButton.style.bottom = '20px';
+            captureButton.style.left = '50%';
+            captureButton.style.transform = 'translateX(-50%)';
+            videoContainer.appendChild(captureButton);
+
+            captureButton.onclick = async () => {
+              const canvas = document.createElement('canvas');
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              const context = canvas.getContext('2d');
+              context.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const imageUrl = canvas.toDataURL('image/png');
+
+              await this.uploadImageToCloudinary(imageUrl);
+              await this.savePhotoToFirestore(imageUrl);
+
+              video.srcObject.getTracks().forEach(track => track.stop());
+              videoContainer.remove();
+              alert('Zdjęcie zostało pomyślnie zrobione i załadowane!');
+            };
+          } catch (e) {
+            alert('Błąd w dostępie do kamery: ' + e);
+          }
         }
-      };
-    
-      fileInput.click();
+      } else {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+
+        fileInput.onchange = async (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const imageUrl = await this.uploadImageToCloudinary(file);
+            await this.savePhotoToFirestore(imageUrl);
+            alert('Zdjęcie zostało pomyślnie załadowane!');
+            console.log('Załadowany URL zdjęcia:', imageUrl);
+          }
+        };
+
+        fileInput.click();
+      }
     },
-    
+
     async savePhotoToFirestore(imageUrl) {
       try {
         const db = firebase.firestore();
@@ -67,12 +114,12 @@ export default {
         console.error('Błąd zapisywania do Firestore:', err);
       }
     },
-    
+
     async uploadImageToCloudinary(file) {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('upload_preset', 'EventHunter');
-      formData.append('folder', 'event-photos');
+      formData.append('upload_preset', 'EventHunter'); 
+      formData.append('folder', 'event-photos');  
 
       const response = await fetch(`https://api.cloudinary.com/v1_1/dxogt6amu/image/upload`, {
         method: 'POST',
