@@ -1,7 +1,7 @@
 export default {
   template: `
     <div class="notifications-box">
-      <h3>Powiadomienia o wydarzeniach</h3>
+      <h3>🔔 Powiadomienia o wydarzeniach</h3>
       <p>Włącz powiadomienia, aby być na bieżąco z wydarzeniami w Twojej okolicy!</p>
       <button @click="enableNotifications" class="login-button notify-button">
         Włącz powiadomienia

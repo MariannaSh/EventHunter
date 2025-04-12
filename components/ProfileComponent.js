@@ -5,6 +5,7 @@ export default {
     EventNotificationsComponent
   },
   template: `
+    <link rel="stylesheet" href="/notifications.css" />
     <div class="profile-container">
       <h2 class="profile-heading">TWÓJ PROFIL</h2>
 
