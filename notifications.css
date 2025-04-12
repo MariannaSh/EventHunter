@@ -1,56 +1,58 @@
 .notifications-box {
    background-color: #1e2734;
-   padding: 20px;
-   border-radius: 8px;
-   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+   padding: 16px;
+   border-radius: 10px;
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
    text-align: center;
-   position: relative;
-   width: 100%;
-   max-width: 450px;
-   margin: 2rem auto 0;
-   padding-bottom: 15px;
-   margin-left: 3mm;
-}
-
-.notifications-box::before {
-   content: "";
-   position: absolute;
-   left: 0;
-   top: 0;
-   height: 100%;
-   width: 8px;
-   background-color: #facc15;
-   border-radius: 8px 0 0 8px;
-}
-
-.notifications-box h3 {
-   font-size: 1.2rem;
-   color: #facc15;
-   margin-bottom: 1rem;
-}
-
-.notifications-box p {
+   max-width: 100%;
+   margin: 1rem auto;
+   color: #fff;
+ }
+ 
+ .notifications-box h3 {
    font-size: 1rem;
+   color: #facc15;
+   margin-bottom: 0.75rem;
+ }
+ 
+ .notifications-box p {
+   font-size: 0.95rem;
    color: #e5e7eb;
    margin-bottom: 1rem;
-}
-
-.notifications-box button {
+ }
+ 
+ .notifications-box button {
    background-color: #e11d48;
    color: #fff;
-   padding: 0.75rem 1.5rem;
-   font-size: 1rem;
+   padding: 0.6rem 1rem;
+   font-size: 0.95rem;
    border-radius: 6px;
-   margin-top: 10px;
-   cursor: pointer;
-   transition: background-color 0.3s ease;
-   margin-bottom: 10px;
+   margin-bottom: 0.75rem;
    width: 100%;
-   max-width: 380px;
-   margin-left: auto;
-   margin-right: auto;
-}
-
-.notifications-box button:hover {
+   transition: background-color 0.3s ease;
+   border: none;
+ }
+ 
+ .notifications-box button:hover {
    background-color: #be123c;
-}
+ }
+ 
+ @media (max-width: 600px) {
+   .notifications-box {
+     margin: 1rem;
+     padding: 12px;
+   }
+ 
+   .notifications-box h3 {
+     font-size: 1rem;
+   }
+ 
+   .notifications-box p {
+     font-size: 0.9rem;
+   }
+ 
+   .notifications-box button {
+     font-size: 0.9rem;
+     padding: 0.6rem;
+   }
+ }

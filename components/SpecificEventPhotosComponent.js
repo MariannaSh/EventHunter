@@ -18,10 +18,19 @@ export default {
       this.loading = false;
     }
   },
+  methods: {
+    goBack() {
+      history.back(); // wraca do poprzedniej strony
+    }
+  },
   template: `
     <div class="photo-gallery">
-    <link rel="stylesheet" href="/eventphotos.css" />
-      <h2>Zobacz zdjęcia z wszystkich wydarzeń</h2>
+      <link rel="stylesheet" href="/eventphotos.css" />
+
+      <h2>
+        <span @click="goBack" class="back-arrow">←</span>
+        Zobacz zdjęcia z wszystkich wydarzeń
+      </h2>
 
       <div v-if="loading" class="loading-text">Ładowanie zdjęć...</div>
 

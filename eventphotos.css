@@ -36,6 +36,31 @@
    margin-top: 30px;
  }
 
+ .back-arrow {
+  cursor: pointer;
+  color: #e11d48;
+  margin-right: 10px;
+  transition: transform 0.2s;
+}
+
+.back-arrow:hover {
+  transform: translateX(-2px);
+}
+
+/* W wersji mobilnej zmniejszamy odstęp */
+@media (max-width: 768px) {
+  .back-arrow {
+    margin-right: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-arrow {
+    margin-right: 4px;
+  }
+}
+
+
  @media (max-width: 768px) {
    .photo-gallery-container {
      gap: 15px;

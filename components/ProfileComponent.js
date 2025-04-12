@@ -54,19 +54,43 @@ export default {
     },
 
     requestNotificationsPermission() {
-      if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            console.log('Zezwolono na powiadomienia');
-            this.subscribeToNotifications();
-          } else {
-            console.log('Odmówiono zezwolenia na powiadomienia');
-          }
-        }).catch(err => {
-          console.error('Błąd przy żądaniu uprawnień:', err);
+      if (!('Notification' in window)) {
+        alert('Urządzenie nie obsługuje powiadomień.');
+        return;
+      }
+
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') {
+          console.log('Zezwolono na powiadomienia');
+          this.subscribeToNotifications();
+        } else {
+          console.log('Odmówiono zezwolenia na powiadomienia');
+        }
+      }).catch(err => {
+        console.error('Błąd przy żądaniu uprawnień:', err);
+        alert('Wystąpił błąd przy próbie włączenia powiadomień.');
+      });
+    },
+
+    sendTestNotification() {
+      if (!('Notification' in window)) {
+        alert('Urządzenie nie obsługuje powiadomień.');
+        return;
+      }
+
+      if (Notification.permission !== 'granted') {
+        alert('Brak zgody na powiadomienia.');
+        return;
+      }
+
+      try {
+        new Notification('Testowe powiadomienie', {
+          body: 'To jest testowe powiadomienie.',
+          icon: '/test-icon.png',
         });
-      } else {
-        console.log('Powiadomienia push nie są wspierane przez ten przeglądarkę');
+      } catch (err) {
+        console.error('Błąd przy wysyłaniu testowego powiadomienia:', err);
+        alert('Nie udało się wysłać testowego powiadomienia.');
       }
     },
     changePassword() {

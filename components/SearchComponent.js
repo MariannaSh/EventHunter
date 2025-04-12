@@ -77,6 +77,7 @@ export default {
               <p>{{ event._embedded?.venues?.[0]?.name || 'Nieznana lokalizacja' }}</p>
               <p>{{ event.dates.start.localDate }} {{ event.dates.start.localTime || '' }}</p>
               <a :href="event.url" target="_blank">Zobacz szczegóły</a>
+              <button @click="addToFavorites(event)" class="favorite-button">Dodaj do ulubionych</button>
             </div>
           </div>
         </div>
@@ -187,7 +188,32 @@ export default {
       const container = document.getElementById('search-carousel');
       const scrollAmount = 300;
       container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    },
+    async addToFavorites(event) {
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        alert("Musisz być zalogowany, aby dodawać do ulubionych.");
+        return;
+      }
+
+      const db = firebase.firestore();
+      const docRef = db.collection("favorites").doc(user.uid);
+
+      try {
+        const doc = await docRef.get();
+        let favs = doc.exists ? doc.data().items : [];
+
+        if (!favs.some(e => e.id === event.id)) {
+          favs.push(event);
+          await docRef.set({ items: favs });
+          alert("Dodano do ulubionych!");
+        } else {
+          alert("To wydarzenie jest już w ulubionych.");
+        }
+      } catch (err) {
+        console.error("Błąd zapisu do Firestore:", err);
+        alert("Nie udało się zapisać ulubionego wydarzenia.");
+      }
     }
-    
   }
-}
+};

@@ -9,7 +9,7 @@ export default {
   created() {
     this.updateTime();
     this.intervalId = setInterval(this.updateTime, 1000);
-  
+
     firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         await this.loadFavorites();
@@ -18,17 +18,29 @@ export default {
       }
     });
   },
-  
+
   beforeUnmount() {
     clearInterval(this.intervalId);
   },
+
   methods: {
     updateTime() {
       this.now = Date.now();
     },
-    getTimeLeft(targetDate) {
-      const diff = new Date(targetDate).getTime() - this.now;
-      if (diff <= 0) return null;
+
+    getTimeLeft(dateTime, localDate) {
+      let finalDate = dateTime || localDate;
+      if (!finalDate) return null;
+
+      if (!finalDate.includes('T')) {
+        finalDate += 'T23:59:59';
+      }
+
+      const target = new Date(finalDate).getTime();
+      const diff = target - this.now;
+
+      if (isNaN(diff) || diff <= 0) return null;
+
       return {
         days: Math.floor(diff / (1000 * 60 * 60 * 24)),
         hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
@@ -40,40 +52,43 @@ export default {
     async loadFavorites() {
       const user = firebase.auth().currentUser;
       if (!user) return;
-    
+
       const db = firebase.firestore();
       const docRef = db.collection("favorites").doc(user.uid);
-    
+
       try {
         const doc = await docRef.get();
         const favs = doc.exists ? doc.data().items : [];
-        this.favorites = favs.sort((a, b) =>
-          new Date(a.dates.start.dateTime) - new Date(b.dates.start.dateTime)
-        );
+        this.favorites = favs.sort((a, b) => {
+          const aDate = a.dates.start.dateTime || a.dates.start.localDate;
+          const bDate = b.dates.start.dateTime || b.dates.start.localDate;
+          return new Date(aDate) - new Date(bDate);
+        });
       } catch (err) {
         console.error("Błąd pobierania ulubionych z Firestore:", err);
       }
-    },    
+    },
 
     async removeFromFavorites(eventId) {
       const user = firebase.auth().currentUser;
       if (!user) return;
-    
+
       const db = firebase.firestore();
       const docRef = db.collection("favorites").doc(user.uid);
-    
+
       try {
         const doc = await docRef.get();
         if (doc.exists) {
           const updated = doc.data().items.filter(e => e.id !== eventId);
           await docRef.set({ items: updated });
-          await this.loadFavorites(); 
+          await this.loadFavorites();
         }
       } catch (err) {
         console.error("Błąd usuwania z Firestore:", err);
       }
-    }    
+    }
   },
+
   template: `
     <div class="favorites-widget">
       <h1 class="favorites-heading">
@@ -81,7 +96,7 @@ export default {
       </h1>
 
       <div v-if="favorites.length === 0" class="no-favorites">
-        <p>Nie masz jeszcze żadnych ulubionych wydarzeń </p>
+        <p>Nie masz jeszcze żadnych ulubionych wydarzeń</p>
       </div>
 
       <div class="poster-list">
@@ -94,16 +109,16 @@ export default {
           <div class="overlay">
             <h2 class="event-title">{{ event.name }}</h2>
 
-            <div v-if="getTimeLeft(event.dates.start.dateTime)" class="big-days">
-              {{ getTimeLeft(event.dates.start.dateTime).days }}
+            <div v-if="getTimeLeft(event.dates.start.dateTime, event.dates.start.localDate)" class="big-days">
+              {{ getTimeLeft(event.dates.start.dateTime, event.dates.start.localDate).days }}
               <div class="label-days">DNI</div>
             </div>
             <p v-else class="expired">Wydarzenie się rozpoczęło</p>
 
-            <div class="time-details" v-if="getTimeLeft(event.dates.start.dateTime)">
-              <div>{{ getTimeLeft(event.dates.start.dateTime).hours }}<span>h</span></div>
-              <div>{{ getTimeLeft(event.dates.start.dateTime).minutes }}<span>m</span></div>
-              <div>{{ getTimeLeft(event.dates.start.dateTime).seconds }}<span>s</span></div>
+            <div class="time-details" v-if="getTimeLeft(event.dates.start.dateTime, event.dates.start.localDate)">
+              <div>{{ getTimeLeft(event.dates.start.dateTime, event.dates.start.localDate).hours }}<span>h</span></div>
+              <div>{{ getTimeLeft(event.dates.start.dateTime, event.dates.start.localDate).minutes }}<span>m</span></div>
+              <div>{{ getTimeLeft(event.dates.start.dateTime, event.dates.start.localDate).seconds }}<span>s</span></div>
             </div>
 
             <a :href="event.url" target="_blank" class="details-link">Zobacz szczegóły</a>
@@ -116,4 +131,4 @@ export default {
       </div>
     </div>
   `
-}
+};

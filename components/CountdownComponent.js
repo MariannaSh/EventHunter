@@ -16,6 +16,11 @@ export default {
     methods: {
       updateCountdown() {
         const now = new Date().getTime();
+        let dateStr = this.targetDate;
+        if (!dateStr.includes('T')) {
+          dateStr += 'T23:59:59';
+         }
+
         const target = new Date(this.targetDate).getTime();
         const difference = target - now;
   
