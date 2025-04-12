@@ -34,8 +34,6 @@ export default async function router(path) {
       return EventGallery; 
     case '/login':
       return Login;
-    default:
-      htmlPath = 'home.html';
   }
 
   const res = await fetch(htmlPath);

@@ -1,4 +1,9 @@
+import EventNotificationsComponent from './EventNotificationsComponent.js';
+
 export default {
+  components: {
+    EventNotificationsComponent
+  },
   template: `
     <div class="profile-container">
       <h2 class="profile-heading">TWÓJ PROFIL</h2>
@@ -15,15 +20,7 @@ export default {
 
       <button @click="changePassword" class="login-button outline-button">Zmień hasło</button>
       <button @click="logout" class="login-button">Wyloguj się</button>
-      <div class="notifications-info">
-        <strong>🔔 Chcesz otrzymywać powiadomienia o nowych wydarzeniach w swojej lokalizacji?</strong>
-        <p>
-          Włącz powiadomienia, aby nie przegapić niczego ciekawego!
-        </p>
-        <button @click="requestNotificationsPermission" class="login-button notify-button">
-          Włącz powiadomienia
-        </button>
-      </div>
+      <EventNotificationsComponent />
 
     </div>`,
   data() {
